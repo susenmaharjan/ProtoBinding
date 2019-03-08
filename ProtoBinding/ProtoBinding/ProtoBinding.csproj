@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>0ab9a3f9-3e98-46b3-9daa-89aa540205bf</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\person.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.2" />
+    <PackageReference Include="protobuf-net" Version="2.4.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\js\protobuf\" />
+  </ItemGroup>
+
+</Project>

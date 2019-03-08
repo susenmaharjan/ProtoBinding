@@ -1,0 +1,142 @@
+﻿@model PersonPoco
+
+@{
+    ViewData["Title"] = "ProtoForm";
+}
+
+<h1>ProtoForm</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ProtoForm" id="protoForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input onclick="protoSubmit()" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a onclick="getPerson()" href="#"> GET Request</a>
+</div>
+
+<div id="personList">
+    <ul class="card-header-tabs"></ul>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        function protoSubmit() {
+
+            var isValid = $("#protoForm").valid();
+
+            if (isValid) {
+                var id = $("#Id").val();
+                var name = $("#Name").val();
+                var email = $("#Email").val();
+
+                var person = createPerson(id, name, email);
+
+                postPerson(person);
+            }
+
+        }
+
+        function createPerson(id, name, email) {
+
+            var person = new window.proto.personpackage.Person();
+
+            person.setId(id);
+            person.setName(name);
+            person.setEmail(email);
+
+            return person;
+        }
+
+        function postPerson(person) {
+            $.ajax({
+                url: 'postproto',
+                type: 'POST',
+                data: person.serializeBinary(),
+                contentType: "application/x-protobuf;",
+                success: function(data) {
+                    console.log(data);
+                    alert('success');
+                },
+                error: function(err) {
+                    console.log(err);
+                    alert(`Error`);
+                },
+                processData: false
+            });
+        }
+
+
+        function getPerson() {
+            $.get({
+                headers: {
+                    Accept: 'application/json'
+                },
+                url: 'GetProto',
+                contentType: 'application/x-protobuf;',
+                success: function(data) {
+
+                    console.log(`before deserializing`);
+                    console.log(data);
+
+                    console.log(`after deserializing`);
+                    var person = window.proto.personpackage.Person.deserializeBinary(data);
+                    console.log(person);
+
+                    var personId = person.getId();
+                    var personName = person.getName();
+                    var personEmail = person.getEmail();
+
+                    $("#personList ul").append(`<li>${personId} ${personName} ${personEmail}</li>`);
+                },
+                error: function(result) {
+                    alert('error');
+                    console.log(result);
+                }
+            });
+
+
+        }
+
+        function getPersonDetail(personId) {
+            $.get({
+                headers: {
+                    Accept: 'application/x-protobuf'
+                },
+                url: `ProtoDetail?id=${personId}`,
+                contentType: 'application/x-protobuf;',
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function(result) {
+                    console.log(result);
+                }
+            });
+        }
+    </script>
+}

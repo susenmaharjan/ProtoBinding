@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<div>
+    <input type="button" value="PROTO" onclick="protoClick()" />
+</div>
+
+<script>
+    function protoClick() {
+        var person = new window.proto.personpackage.Person();
+        person.setId(101);
+        person.setName("Susen");
+        person.setEmail("susen.maharjan@javra.com");
+
+        var person2 = new window.proto.personpackage.Person();
+        person2.setId(102);
+        person2.setName("Hari");
+        person2.setEmail("hari@javra.com");
+
+        $.ajax({
+            url: 'api/proto/postproto',
+            type: 'POST',
+            data: person.serializeBinary(),
+            contentType: "application/x-protobuf;",
+            success: function () {
+                alert('success');
+            },
+            error: function (err) {
+                console.log(err);
+                alert(err);
+            },
+            processData: false
+        });
+
+        //test for list of protobuf object
+        var protoList = new window.proto.personpackage.PersonList();
+
+        protoList.addPersons(person);
+        protoList.addPersons(person2);
+
+        $.ajax({
+            url: 'api/proto/postprotolist',
+            type: 'POST',
+            data: protoList.serializeBinary(),
+            contentType: "application/x-protobuf;",
+            success: function () {
+                alert('success');
+            },
+            error: function (err) {
+                console.log(err);
+                alert(err);
+            },
+            processData: false
+        });
+
+    }
+</script>

@@ -1,0 +1,8 @@
+syntax="proto3";
+package personpackage;
+
+message PersonMessage {
+	 required string name = 1;
+	 required int32 id = 2;
+	 required string email = 3;
+}
